@@ -1,11 +1,15 @@
-// spotinst/[NAME]
-
-variable "spotinst_token" {
-  type        = string
-  description = "Spot Personal Access token"
+variable "name" {
+    type        = string
+    default     = null
+    description = "(OPTIONAL) Name for the Spot account. If none is provided will use the AWS Linked account display name for the Spot account name"
 }
-
-variable "spotinst_account" {
-  type        = string
-  description = "Spot account ID"
+variable "profile" {
+    type        = string
+    default     = null
+    description = "(OPTIONAL) AWS profile name. Ex: default"
+}
+variable "policy_file" {
+    type        = string
+    default     = null
+    description = "(OPTIONAL) Provide Custom IAM Policy File in JSON format"
 }
