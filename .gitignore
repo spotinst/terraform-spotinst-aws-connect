@@ -13,3 +13,5 @@ terraform.tfvars
 
 # jetbrains
 .idea
+
+test/

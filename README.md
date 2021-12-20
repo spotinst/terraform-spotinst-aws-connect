@@ -9,8 +9,8 @@ The module will aid in automatically connecting an AWS Account to Spot via terra
 
 ###Example
 ```hcl
-module "spot_account_aws" {
-    source = "stevenfeltner/aws-connect/spotinst"
+module "spotinst-aws-connect" {
+    source = "spotinst/aws-connect/spotinst"
 
     #AWS Profile (Optional)
     #profile = ""

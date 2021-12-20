@@ -1,5 +1,5 @@
-module "spot_aws_account" {
-    source = "../"
+module "spotinst-aws-connect" {
+    source = "spotinst/aws-connect/spotinst"
 
     #Name of the linked account in Spot (Optional) If none is provided will use account alias as the account name.
     #name = "test-terraform"
@@ -9,5 +9,5 @@ module "spot_aws_account" {
 }
 
 output "spot_account_id" {
-    value = module.spot_aws_account.spot_account_id
+    value = module.spotinst-aws-connect.spot_account_id
 }
