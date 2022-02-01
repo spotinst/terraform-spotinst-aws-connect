@@ -68,6 +68,22 @@ resource "null_resource" "account" {
 }
 
 
+resource "local_file" "external-id" {
+    filename = "${path.module}/scripts/external_id.txt"
+    sensitive_content = true
+}
+
+
+resource "null_resource" "create_external_id" {
+    depends_on = [null_resource.account, local_file.external-id]
+    triggers = {account_id = local.account_id}
+    provisioner "local-exec" {
+        interpreter = ["/bin/bash", "-c"]
+        command = "${local.cmd} create-external-id ${self.triggers.account_id} > ${path.module}/scripts/external_id.txt"
+    }
+}
+
+
 # Link the Role ARN to the Spot Account
 resource "null_resource" "account_association" {
     depends_on = [aws_iam_role.spot]

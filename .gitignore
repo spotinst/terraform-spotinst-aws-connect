@@ -15,3 +15,5 @@ terraform.tfvars
 .idea
 
 test/
+scripts/__pycache__/
+scripts/spot_account_aws.egg-info/
