@@ -27,7 +27,8 @@ def create(ctx, *args, **kwargs):
 @click.pass_context
 def delete(ctx, *args, **kwargs):
     """Delete a Spot Account"""
-    ctx.obj['client'].delete_account(kwargs.get('account_id'))
+    result = ctx.obj['client'].delete_account(kwargs.get('account_id'))
+    click.echo(json.dumps(result))
 
 
 @cli.command()
@@ -37,7 +38,8 @@ def create_external_id(ctx, *args, **kwargs):
     """Generate the Spot External ID for Spot Account connection"""
     ctx.obj['client2'].account_id = kwargs.get('account_id')
     result = ctx.obj['client2'].create_external_id()
-    click.echo(json.dumps(result))
+    external_id = result["external_id"]
+    click.echo(external_id)
 
 
 @cli.command()
