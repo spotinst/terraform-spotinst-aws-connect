@@ -1,6 +1,27 @@
-# Create the AWS Role for Spot
+# Call Spot API to create the Spot Account
+resource "null_resource" "account" {
+    triggers = {
+        cmd     = "${path.module}/scripts/spot-account-aws"
+        name    = local.name
+        token   = var.spotinst_token
+    }
+    provisioner "local-exec" {
+        interpreter = ["/bin/bash", "-c"]
+        command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${var.spotinst_token}"
+    }
+    provisioner "local-exec" {
+        when        = destroy
+        interpreter = ["/bin/bash", "-c"]
+        command = <<-EOT
+            ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id --token=${self.triggers.token}) &&\
+            ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token}
+        EOT
+    }
+}
+
+# Create AWS Role for Spot
 resource "aws_iam_role" "spot"{
-    name = "SpotRole-${random_id.role.hex}"
+    name = "SpotRole-${local.account_id}"
     provisioner "local-exec" {
         # Without this set-cloud-credentials fails
         command = "sleep 10"
@@ -24,20 +45,13 @@ resource "aws_iam_role" "spot"{
             ]
         }
     EOT
-
-    lifecycle {
-        ignore_changes = [
-            assume_role_policy
-        ]
-    }
 }
 
-# Create the Policy
+# Create IAM Policy
 resource "aws_iam_policy" "spot" {
-    name        = "Spot-Policy-${random_id.role.hex}"
+    name        = "Spot-Policy-${local.account_id}"
     path        = "/"
-    description = "Allow Spot.io to manage resources"
-
+    description = "Spot by NetApp IAM policy to manage resources"
     policy = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})
 }
 
@@ -47,49 +61,30 @@ resource "aws_iam_role_policy_attachment" "spot" {
     policy_arn = aws_iam_policy.spot.arn
 }
 
-# Call Spot API to create the Spot Account
-resource "null_resource" "account" {
-    triggers = {
-        cmd = "${path.module}/scripts/spot-account-aws"
-        name = local.name
-    }
-    provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
-        command = "${self.triggers.cmd} create ${self.triggers.name}"
-    }
-    provisioner "local-exec" {
-        when = destroy
-        interpreter = ["/bin/bash", "-c"]
-        command = <<-EOT
-            ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id) &&\
-            ${self.triggers.cmd} delete "$ID"
-        EOT
-    }
-}
-
-
+# Create local file to store externalID
 resource "local_file" "external-id" {
     filename = "${path.module}/scripts/external_id.txt"
     sensitive_content = true
 }
 
-
+# Call Spot API to generate external ID
 resource "null_resource" "create_external_id" {
     depends_on = [null_resource.account, local_file.external-id]
-    triggers = {account_id = local.account_id}
+    triggers = {
+        account_id  = local.account_id
+    }
     provisioner "local-exec" {
         interpreter = ["/bin/bash", "-c"]
-        command = "${local.cmd} create-external-id ${self.triggers.account_id} > ${path.module}/scripts/external_id.txt"
+        command = "${local.cmd} create-external-id ${self.triggers.account_id} --token=${var.spotinst_token} > ${path.module}/scripts/external_id.txt"
     }
 }
-
 
 # Link the Role ARN to the Spot Account
 resource "null_resource" "account_association" {
     depends_on = [aws_iam_role.spot]
     provisioner "local-exec" {
         interpreter = ["/bin/bash", "-c"]
-        command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn}"
+        command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn} --token=${var.spotinst_token}"
     }
 }
 
