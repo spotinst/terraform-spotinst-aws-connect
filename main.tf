@@ -21,7 +21,7 @@ resource "null_resource" "account" {
 
 # Create AWS Role for Spot
 resource "aws_iam_role" "spot"{
-    name = "SpotRole-${local.account_id}"
+    name = var.role_name == null ? "SpotRole-${local.account_id}" : var.role_name
     provisioner "local-exec" {
         # Without this set-cloud-credentials fails
         command = "sleep 10"
@@ -49,7 +49,7 @@ resource "aws_iam_role" "spot"{
 
 # Create IAM Policy
 resource "aws_iam_policy" "spot" {
-    name        = "Spot-Policy-${local.account_id}"
+    name        = var.policy_name == null ? "Spot-Policy-${local.account_id}" : var.policy_name
     path        = "/"
     description = "Spot by NetApp IAM policy to manage resources"
     policy = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})

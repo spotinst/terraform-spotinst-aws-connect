@@ -7,7 +7,7 @@ The module will aid in automatically connecting an AWS Account to Spot via terra
 * Spot.io organization admin [API token](https://docs.spot.io/administration/api/create-api-token).
 * Python 3
 
-###Example
+### Example
 ```hcl
 module "spotinst-aws-connect" {
     source = "spotinst/aws-connect/spotinst"

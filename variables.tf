@@ -18,3 +18,13 @@ variable "policy_file" {
     default     = null
     description = "(OPTIONAL) Provide Custom IAM Policy File in JSON format"
 }
+variable "role_name" {
+    type        = string
+    default     = null
+    description = "(OPTIONAL) Provide Custom IAM Role Name"
+}
+variable "policy_name" {
+    type        = string
+    default     = null
+    description = "(OPTIONAL) Provide Custom IAM Policy Name"
+}
