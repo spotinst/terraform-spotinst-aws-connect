@@ -36,6 +36,7 @@ def create(ctx, *args, **kwargs):
     required=True,
     help='Spotinst Token'
 )
+@click.argument('random-string')
 @click.pass_context
 def delete(ctx, *args, **kwargs):
     """Delete a Spot Account"""
@@ -44,7 +45,7 @@ def delete(ctx, *args, **kwargs):
     result = ctx.obj['client'].delete_account(kwargs.get('account_id'))
     client = boto3.client('ssm')
     try:
-        client.delete_parameter(Name="Spot-External-ID")
+        client.delete_parameter(Name="Spot-External-ID-" + str(kwargs.get('random_string')))
     except ClientError as e:
         print(e)
     click.echo(json.dumps(result))
@@ -66,6 +67,7 @@ def create_external_id(ctx, *args, **kwargs):
         fail_string = {'external_id': ''}
         click.echo(json.dumps(fail_string))
     else:
+        name = "Spot-External-ID-" + str(input_dict.get('random_string'))
         session = SpotinstSession(auth_token=kwargs.get('token'))
         ctx.obj['client2'] = session.client("setup_aws")
         ctx.obj['client2'].account_id = kwargs.get('account_id')
@@ -73,7 +75,7 @@ def create_external_id(ctx, *args, **kwargs):
         external_id = result["external_id"]
         try:
             client = boto3.client('ssm')
-            client.put_parameter(Name="Spot-External-ID", Value=external_id, Type='String', Tier='Standard',
+            client.put_parameter(Name=name, Value=external_id, Type='String', Tier='Standard',
                                  Overwrite=True)
         except ClientError as e:
             sys.exit(e)

@@ -4,6 +4,7 @@ resource "null_resource" "account" {
         cmd     = "${path.module}/scripts/spot-account-aws"
         name    = local.name
         token   = var.spotinst_token
+        random  = local.random
     }
     provisioner "local-exec" {
         interpreter = ["/bin/bash", "-c"]
@@ -14,14 +15,14 @@ resource "null_resource" "account" {
         interpreter = ["/bin/bash", "-c"]
         command = <<-EOT
             ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id --token=${self.triggers.token}) &&\
-            ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token}
+            ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token} ${self.triggers.random}
         EOT
     }
 }
 
 # Create AWS Role for Spot
 resource "aws_iam_role" "spot"{
-    name = var.role_name == null ? "SpotRole-${local.account_id}" : var.role_name
+    name = var.role_name == null ? "SpotRole-${local.account_id}-${random_id.random_string.hex}" : var.role_name
     provisioner "local-exec" {
         # Without this set-cloud-credentials fails
         command = "sleep 10"
@@ -53,7 +54,7 @@ resource "aws_iam_role" "spot"{
 
 # Create IAM Policy
 resource "aws_iam_policy" "spot" {
-    name        = var.policy_name == null ? "Spot-Policy-${local.account_id}" : var.policy_name
+    name        = var.policy_name == null ? "Spot-Policy-${local.account_id}-${random_id.random_string.hex}" : var.policy_name
     path        = "/"
     description = "Spot by NetApp IAM policy to manage resources"
     policy      = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})
