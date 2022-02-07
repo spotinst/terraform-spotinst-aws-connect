@@ -7,7 +7,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'Click',
-        'spotinst-sdk2>=2.1.10'
+        'spotinst-sdk2>=2.1.10',
+        'boto3'
     ],
     entry_points='''
         [console_scripts]

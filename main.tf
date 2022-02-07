@@ -69,9 +69,14 @@ resource "aws_iam_role_policy_attachment" "spot" {
     policy_arn = aws_iam_policy.spot.arn
 }
 
+resource "time_sleep" "wait_05_seconds" {
+    depends_on = [aws_iam_role_policy_attachment.spot]
+    create_duration = "5s"
+}
+
 # Link the Role ARN to the Spot Account
 resource "null_resource" "account_association" {
-    depends_on = [aws_iam_role_policy_attachment.spot]
+    depends_on = [aws_iam_role_policy_attachment.spot, time_sleep.wait_05_seconds]
     provisioner "local-exec" {
         interpreter = ["/bin/bash", "-c"]
         command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn} --token=${var.spotinst_token}"
