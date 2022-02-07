@@ -38,13 +38,17 @@ resource "aws_iam_role" "spot"{
                 "Action": "sts:AssumeRole",
                 "Condition": {
                     "StringEquals": {
-                    "sts:ExternalId": "${local.external_id}"
+                    "sts:ExternalId": "${data.aws_ssm_parameter.external-id.value}"
                     }
                 }
                 }
             ]
         }
     EOT
+    tags = var.tags
+    lifecycle {
+        ignore_changes = [tags]
+    }
 }
 
 # Create IAM Policy
@@ -52,7 +56,11 @@ resource "aws_iam_policy" "spot" {
     name        = var.policy_name == null ? "Spot-Policy-${local.account_id}" : var.policy_name
     path        = "/"
     description = "Spot by NetApp IAM policy to manage resources"
-    policy = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})
+    policy      = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})
+    tags        = var.tags
+    lifecycle {
+        ignore_changes = [tags]
+    }
 }
 
 # Attach the policy to the role
@@ -61,27 +69,9 @@ resource "aws_iam_role_policy_attachment" "spot" {
     policy_arn = aws_iam_policy.spot.arn
 }
 
-# Create local file to store externalID
-resource "local_file" "external-id" {
-    filename = "${path.module}/scripts/external_id.txt"
-    sensitive_content = true
-}
-
-# Call Spot API to generate external ID
-resource "null_resource" "create_external_id" {
-    depends_on = [null_resource.account, local_file.external-id]
-    triggers = {
-        account_id  = local.account_id
-    }
-    provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
-        command = "${local.cmd} create-external-id ${self.triggers.account_id} --token=${var.spotinst_token} > ${path.module}/scripts/external_id.txt"
-    }
-}
-
 # Link the Role ARN to the Spot Account
 resource "null_resource" "account_association" {
-    depends_on = [aws_iam_role.spot]
+    depends_on = [aws_iam_role_policy_attachment.spot]
     provisioner "local-exec" {
         interpreter = ["/bin/bash", "-c"]
         command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn} --token=${var.spotinst_token}"

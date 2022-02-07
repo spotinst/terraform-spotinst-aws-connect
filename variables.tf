@@ -28,3 +28,8 @@ variable "policy_name" {
     default     = null
     description = "(OPTIONAL) Provide Custom IAM Policy Name"
 }
+variable "tags" {
+    type        = map(string)
+    default     = null
+    description = "(OPTIONAL) Add tags to AWS resources"
+}
