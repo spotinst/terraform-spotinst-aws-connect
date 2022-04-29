@@ -8,6 +8,11 @@ variable "spotinst_token" {
     description = "Spot API Token"
     sensitive   = true
 }
+variable "debug" {
+    type        = bool
+    description = "Add flag to expose sensitive variables for troubleshooting"
+    default     = false
+}
 variable "profile" {
     type        = string
     default     = null
