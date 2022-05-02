@@ -6,6 +6,8 @@ The module will aid in automatically connecting an AWS Account to Spot via terra
 ### Pre-Reqs
 * Spot.io organization admin [API token](https://docs.spot.io/administration/api/create-api-token).
 * Python 3
+* The Terraform CLI, version 0.13 or later.
+* AWS Credentials configured for use with Terraform.
 
 ### Example
 ```hcl
