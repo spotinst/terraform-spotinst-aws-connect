@@ -21,9 +21,11 @@ module "spotinst-aws-connect" {
 
     #(Optional) Name of the account in Spot platform - If none is provided use AWS account alias as the account name.
     #name = "test-terraform"
-  
-    #Policy File (Optional) File with policy to attach to role
-    #policy_file = example.json
+
+    #Policy File (Optional) File with policy to attach to the Spot role
+    #policy_file = templatefile(minimal-spot-iam-policy.json.tftpl", {
+    #   region     = "us-east-1"
+    #   account_id = "123456789" })
 }
 ```
 

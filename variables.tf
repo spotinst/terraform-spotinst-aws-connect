@@ -6,6 +6,7 @@ variable "name" {
 variable "spotinst_token" {
     type        = string
     description = "Spot API Token"
+    sensitive   = true
 }
 variable "debug" {
     type        = bool
