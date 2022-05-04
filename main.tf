@@ -57,7 +57,7 @@ resource "aws_iam_policy" "spot" {
     name        = var.policy_name == null ? "Spot-Policy-${local.account_id}-${random_id.random_string.hex}" : var.policy_name
     path        = "/"
     description = "Spot by NetApp IAM policy to manage resources"
-    policy      = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})
+    policy      = var.policy_file == null ? templatefile("${path.module}/spot_policy.json", {}) : var.policy_file
     tags        = var.tags
     lifecycle {
         ignore_changes = [tags]
