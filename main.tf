@@ -1,18 +1,16 @@
 # Call Spot API to create the Spot Account
 resource "null_resource" "account" {
     triggers = {
-        cmd     = "${path.module}/scripts/spot-account-aws"
+        cmd     = "${path.module}/scripts/spot_account_aws.py"
         name    = local.name
         token   = var.spotinst_token
         random  = local.random
     }
     provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${var.spotinst_token}"
     }
     provisioner "local-exec" {
         when        = destroy
-        interpreter = ["/bin/bash", "-c"]
         command = <<-EOT
             ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id --token=${self.triggers.token}) &&\
             ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token} ${self.triggers.random}
@@ -79,7 +77,6 @@ resource "time_sleep" "wait_05_seconds" {
 resource "null_resource" "account_association" {
     depends_on = [aws_iam_role_policy_attachment.spot, time_sleep.wait_05_seconds]
     provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
         command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn} --token=${var.spotinst_token}"
     }
 }

@@ -14,7 +14,6 @@ data "external" "account" {
 }
 
 data "external" "external_id" {
-  depends_on = [null_resource.account]
   program = [
     local.cmd,
     "create-external-id",
