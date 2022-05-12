@@ -133,13 +133,13 @@ def get(ctx, *args, **kwargs):
             result = result[0].get(kwargs.get('attr'))
             click.echo(result)
         else:
-            fail_string = {'account_id': '', 'organization_id': '', 'cloudProvider': ''}
+            fail_string = {'account_id': '', 'organization_id': '', 'cloud_provider': ''}
             click.echo(json.dumps(fail_string))
     else:
         if result:
             click.echo(json.dumps(result[0]))
         else:
-            fail_string = {'account_id': '', 'organization_id': '', 'cloudProvider': ''}
+            fail_string = {'account_id': '', 'organization_id': '', 'cloud_provider': ''}
             click.echo(json.dumps(fail_string))
 
 
