@@ -7,6 +7,9 @@ resource "null_resource" "account" {
         random  = local.random
     }
     provisioner "local-exec" {
+        command     = "python3 ${path.module}/scripts/setup.py install"
+    }
+    provisioner "local-exec" {
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${var.spotinst_token}"
     }
     provisioner "local-exec" {
