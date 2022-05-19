@@ -14,7 +14,6 @@ data "external" "account" {
 }
 
 data "external" "external_id" {
-  depends_on = [null_resource.account]
   program = [
     local.cmd,
     "create-external-id",
@@ -35,5 +34,5 @@ resource "time_sleep" "wait_05" {
 
 data "aws_ssm_parameter" "external-id" {
   depends_on = [time_sleep.wait_05]
-  name = "Spot-External-ID-${local.random}"
+  name = "Spot-External-ID-${random_id.random_string.hex}"
 }
