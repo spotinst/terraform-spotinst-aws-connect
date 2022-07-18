@@ -1,5 +1,5 @@
 locals {
-  cmd             = "${path.module}/scripts/spot-account-aws"
+  cmd             = "${path.module}/scripts/spot_account_aws.py"
   account_id      = data.external.account.result["account_id"]
   organization_id = data.external.account.result["organization_id"]
   cloudProvider   = data.external.account.result["cloud_provider"]

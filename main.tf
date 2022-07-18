@@ -1,18 +1,19 @@
 # Call Spot API to create the Spot Account
 resource "null_resource" "account" {
     triggers = {
-        cmd     = "${path.module}/scripts/spot-account-aws"
+        cmd     = "${path.module}/scripts/spot_account_aws.py"
         name    = local.name
         token   = var.spotinst_token
         random  = local.random
     }
     provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
+        command     = "python3 ${path.module}/scripts/setup.py install"
+    }
+    provisioner "local-exec" {
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${var.spotinst_token}"
     }
     provisioner "local-exec" {
         when        = destroy
-        interpreter = ["/bin/bash", "-c"]
         command = <<-EOT
             ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id --token=${self.triggers.token}) &&\
             ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token} ${self.triggers.random}
@@ -57,7 +58,7 @@ resource "aws_iam_policy" "spot" {
     name        = var.policy_name == null ? "Spot-Policy-${local.account_id}-${random_id.random_string.hex}" : var.policy_name
     path        = "/"
     description = "Spot by NetApp IAM policy to manage resources"
-    policy      = templatefile(var.policy_file == null ? "${path.module}/spot_policy.json" : var.policy_file, {})
+    policy      = var.policy_file == null ? templatefile("${path.module}/spot_policy.json", {}) : var.policy_file
     tags        = var.tags
     lifecycle {
         ignore_changes = [tags]
@@ -79,7 +80,6 @@ resource "time_sleep" "wait_05_seconds" {
 resource "null_resource" "account_association" {
     depends_on = [aws_iam_role_policy_attachment.spot, time_sleep.wait_05_seconds]
     provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
         command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn} --token=${var.spotinst_token}"
     }
 }

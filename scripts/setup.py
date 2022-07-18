@@ -1,17 +1,16 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
-    name='spot-account-aws',
-    version='0.1',
-    packages=find_packages(),
-    include_package_data=True,
+    name='spot_account_aws',
+    version='0.2',
+    py_modules=['spot_account_aws'],
     install_requires=[
         'Click',
         'spotinst-sdk2>=2.1.10',
-        'boto3'
+        'boto3',
     ],
     entry_points='''
         [console_scripts]
-        spot-account-aws=spot_account_aws:cli
+        spot_account_aws=spot_account_aws:cli
     ''',
 )
