@@ -10,6 +10,7 @@ module "spotinst-aws-connect" {
     #        account_id = "123456789" })
 }
 
-output "spot_account_id" {
-    value = module.spotinst-aws-connect.spot_account_id
-}
+
+    output "spot_account_id" {
+        value = module.spotinst-aws-connect.spot_account_id
+    }

@@ -1,35 +1,28 @@
 <a name="v0.2.0"></a>
-## [v0.2.1] (May 19, 2022)
-
-- call full path of python script
-- add error handling for cloud_provider
-- add call for setup.py
-
-<a name="v0.1.4"></a>
-## [v0.1.4] (May 19, 2022)
-
-- call full path of python script
-- add error handling for cloud_provider
-- add call for setup.py
-
-<a name="v0.2.0"></a>
-## [v0.2.0] (May 2, 2022)
+## [v0.2.0] (January 1, 0001)
 
 - update terraform version to 14
 - Update token variable to sensitive
 
+<a name="v0.1.4"></a>
+## [v0.1.4] (December 21, 2021)
+
+- call full path of python script
+- add error handling for cloud_provider
+- add call for setup.py
+
 <a name="v0.1.3"></a>
-## [v0.1.3] (May 2, 2022)
+## [v0.1.3] (December 21, 2021)
 
 - update policy file with option for variable
-- update versions.tf to support version 13
+- update versions.tf
 
 <a name="v0.1.2"></a>
-## [v0.1.2] (Feb 8, 2022)
+## [v0.1.2] (December 21, 2021)
 
 
 <a name="v0.1.1"></a>
-## [v0.1.1] (Feb 8, 2022)
+## [v0.1.1] (December 21, 2021)
 
 - remove sensitive variable for terraform v0.13 (#7)
 
