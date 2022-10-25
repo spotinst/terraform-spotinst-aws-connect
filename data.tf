@@ -31,8 +31,10 @@ resource "time_sleep" "wait_05" {
   create_duration = "5s"
 }
 
-
-data "aws_ssm_parameter" "external-id" {
+resource "aws_ssm_parameter" "external-id" {
   depends_on = [time_sleep.wait_05]
-  name = "Spot-External-ID-${random_id.random_string.hex}"
+  name = "Spot-External-ID-${local.random}"
+  type = "String"
+  value = data.external.external_id.result["external_id"]
 }
+s
