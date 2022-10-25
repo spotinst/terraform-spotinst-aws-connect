@@ -40,7 +40,7 @@ resource "aws_iam_role" "spot"{
                 "Action": "sts:AssumeRole",
                 "Condition": {
                     "StringEquals": {
-                    "sts:ExternalId": "${data.aws_ssm_parameter.external-id.value}"
+                    "sts:ExternalId": "${aws.aws_ssm_parameter.external-id.value}"
                     }
                 }
                 }

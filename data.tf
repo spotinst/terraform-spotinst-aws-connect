@@ -37,4 +37,3 @@ resource "aws_ssm_parameter" "external-id" {
   type = "String"
   value = data.external.external_id.result["external_id"]
 }
-s
