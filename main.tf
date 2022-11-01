@@ -21,6 +21,18 @@ resource "null_resource" "account" {
     }
 }
 
+resource "time_sleep" "wait_05" {
+    depends_on = [data.external.external_id]
+    create_duration = "5s"
+}
+
+resource "aws_ssm_parameter" "external-id" {
+    depends_on = [time_sleep.wait_05]
+    name = "Spot-External-ID-${random_id.random_string.hex}"
+    type = "String"
+    value = data.external.external_id.result["external_id"]
+}
+
 # Create AWS Role for Spot
 resource "aws_iam_role" "spot"{
     name = var.role_name == null ? "SpotRole-${local.account_id}-${random_id.random_string.hex}" : var.role_name
@@ -40,7 +52,7 @@ resource "aws_iam_role" "spot"{
                 "Action": "sts:AssumeRole",
                 "Condition": {
                     "StringEquals": {
-                    "sts:ExternalId": "${data.aws_ssm_parameter.external-id.value}"
+                    "sts:ExternalId": "${aws_ssm_parameter.external-id.value}"
                     }
                 }
                 }
