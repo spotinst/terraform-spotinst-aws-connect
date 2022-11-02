@@ -1,5 +1,11 @@
+
+<a name="v0.3.0"></a>   
+## [v0.3.0] (October 31, 2022)
+
+- Move SSM to terraform resource   
+
 <a name="v0.2.0"></a>
-## [v0.2.0] (January 1, 0001)
+## [v0.2.0] (January 1, 2022)
 
 - update terraform version to 14
 - Update token variable to sensitive

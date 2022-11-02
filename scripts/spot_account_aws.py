@@ -2,10 +2,7 @@
 
 import click
 import json
-import sys
-import boto3
 
-from botocore.exceptions import ClientError
 from spotinst_sdk2 import SpotinstSession
 
 
@@ -45,11 +42,6 @@ def delete(ctx, *args, **kwargs):
     session = SpotinstSession(auth_token=kwargs.get('token'))
     ctx.obj['client'] = session.client("admin")
     result = ctx.obj['client'].delete_account(kwargs.get('account_id'))
-    client = boto3.client('ssm')
-    try:
-        client.delete_parameter(Name="Spot-External-ID-" + str(kwargs.get('random_string')))
-    except ClientError as e:
-        print(e)
     click.echo(json.dumps(result))
 
 
@@ -63,26 +55,13 @@ def delete(ctx, *args, **kwargs):
 @click.pass_context
 def create_external_id(ctx, *args, **kwargs):
     """Generate the Spot External ID for Spot Account connection"""
-    input_json = sys.stdin.read()
-    input_dict = json.loads(input_json)
-    if input_dict.get('cloud_provider'):
-        fail_string = {'external_id': ''}
-        click.echo(json.dumps(fail_string))
-    else:
-        name = "Spot-External-ID-" + str(input_dict.get('random_string'))
-        session = SpotinstSession(auth_token=kwargs.get('token'))
-        ctx.obj['client2'] = session.client("setup_aws")
-        ctx.obj['client2'].account_id = kwargs.get('account_id')
-        result = ctx.obj['client2'].create_external_id()
-        external_id = result["external_id"]
-        try:
-            client = boto3.client('ssm')
-            client.put_parameter(Name=name, Value=external_id, Type='String', Tier='Standard',
-                                 Overwrite=True)
-        except ClientError as e:
-            sys.exit(e)
-        result = {'external_id': external_id}
-        click.echo(json.dumps(result))
+    session = SpotinstSession(auth_token=kwargs.get('token'))
+    ctx.obj['client2'] = session.client("setup_aws")
+    ctx.obj['client2'].account_id = kwargs.get('account_id')
+    result = ctx.obj['client2'].create_external_id()
+    external_id = result["external_id"]
+    result = {'external_id': external_id}
+    click.echo(json.dumps(result))
 
 
 @cli.command()

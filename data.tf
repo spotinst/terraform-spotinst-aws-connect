@@ -26,13 +26,4 @@ data "external" "external_id" {
   }
 }
 
-resource "time_sleep" "wait_05" {
-  depends_on = [data.external.external_id]
-  create_duration = "5s"
-}
 
-
-data "aws_ssm_parameter" "external-id" {
-  depends_on = [time_sleep.wait_05]
-  name = "Spot-External-ID-${random_id.random_string.hex}"
-}
