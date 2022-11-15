@@ -1,7 +1,5 @@
 data "aws_iam_account_alias" "current" {}
 
-data "aws_default_tags" "default_tags" {}
-
 # Retrieve the Spot Account ID
 data "external" "account" {
   depends_on = [null_resource.account]
@@ -14,6 +12,7 @@ data "external" "account" {
 }
 
 data "external" "external_id" {
+  depends_on = [null_resource.account]
   program = [
     local.cmd,
     "create-external-id",
@@ -21,9 +20,6 @@ data "external" "external_id" {
     "--token=${var.spotinst_token}"
   ]
   query = {
-    cloud_provider = local.cloudProvider
-    random_string = local.random
+    cloudProvider = local.cloudProvider
   }
 }
-
-

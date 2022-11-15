@@ -6,11 +6,7 @@ variable "name" {
 variable "spotinst_token" {
     type        = string
     description = "Spot API Token"
-}
-variable "profile" {
-    type        = string
-    default     = null
-    description = "(OPTIONAL) AWS profile name. Ex: default"
+    sensitive   = true
 }
 variable "policy_file" {
     type        = string
@@ -31,4 +27,9 @@ variable "tags" {
     type        = map(string)
     default     = null
     description = "(OPTIONAL) Add tags to AWS resources"
+}
+variable "debug" {
+    type        = bool
+    description = "Add flag to expose sensitive variables for troubleshooting"
+    default     = false
 }
