@@ -2,6 +2,7 @@
 
 import click
 import json
+import sys
 
 from spotinst_sdk2 import SpotinstSession
 
@@ -55,13 +56,19 @@ def delete(ctx, *args, **kwargs):
 @click.pass_context
 def create_external_id(ctx, *args, **kwargs):
     """Generate the Spot External ID for Spot Account connection"""
-    session = SpotinstSession(auth_token=kwargs.get('token'))
-    ctx.obj['client2'] = session.client("setup_aws")
-    ctx.obj['client2'].account_id = kwargs.get('account_id')
-    result = ctx.obj['client2'].create_external_id()
-    external_id = result["external_id"]
-    result = {'external_id': external_id}
-    click.echo(json.dumps(result))
+    input_json = sys.stdin.read()
+    input_dict = json.loads(input_json)
+    if input_dict.get('cloudProvider'):
+        fail_string = {'external_id': 'Already Exists, skipping'}
+        click.echo(json.dumps(fail_string))
+    else:
+        session = SpotinstSession(auth_token=kwargs.get('token'))
+        ctx.obj['client2'] = session.client("setup_aws")
+        ctx.obj['client2'].account_id = kwargs.get('account_id')
+        result = ctx.obj['client2'].create_external_id()
+        external_id = result["external_id"]
+        result = {'external_id': external_id}
+        click.echo(json.dumps(result))
 
 
 @cli.command()

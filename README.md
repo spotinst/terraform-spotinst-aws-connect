@@ -15,9 +15,6 @@ module "spotinst-aws-connect" {
     source = "spotinst/aws-connect/spotinst"
 
     spotinst_token = "Redacted"
-  
-    #AWS Profile (Optional)
-    #profile = ""
 
     #(Optional) Name of the account in Spot platform - If none is provided use AWS account alias as the account name.
     #name = "test-terraform"
