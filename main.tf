@@ -1,6 +1,6 @@
 resource "null_resource" "install_dependencies" {
     provisioner "local-exec" {
-        command = "pip install -e ${path.module}/scripts/"
+        command = "pip3 install -e ${path.module}/scripts/"
     }
 }
 
