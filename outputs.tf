@@ -4,9 +4,9 @@ output "spot_account_id" {
 }
 
 output "cur_bucket_name" {
-  value = aws_s3_bucket.cur_bucket.id
+  value = var.eco ? aws_s3_bucket.cur_bucket[0].id : ""
 }
 
 output "eco_role_arn" {
-  value = aws_iam_role.eco.arn
+  value = var.eco ? aws_iam_role.eco[0].arn : ""
 }
