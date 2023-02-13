@@ -2,7 +2,7 @@ data "aws_iam_account_alias" "current" {}
 
 # Retrieve the Spot Account ID
 data "external" "account" {
-  depends_on = [null_resource.account]
+  depends_on = [null_resource.install_dependencies, null_resource.account]
   program = [
     local.cmd,
     "get",
@@ -12,7 +12,7 @@ data "external" "account" {
 }
 
 data "external" "external_id" {
-  depends_on = [null_resource.account]
+  depends_on = [null_resource.install_dependencies, null_resource.account]
   program = [
     local.cmd,
     "create-external-id",

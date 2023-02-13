@@ -1,13 +1,17 @@
+resource "null_resource" "install_dependencies" {
+    provisioner "local-exec" {
+        command = "pip3 install -e ${path.module}/scripts/"
+    }
+}
+
 # Call Spot API to create the Spot Account
 resource "null_resource" "account" {
+    depends_on = [null_resource.install_dependencies]
     triggers = {
         cmd     = local.cmd
         name    = local.name
         token   = local.spotinst_token
         random  = local.random
-    }
-    provisioner "local-exec" {
-        command     = "python3 ${path.module}/scripts/setup.py install"
     }
     provisioner "local-exec" {
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${self.triggers.token}"
