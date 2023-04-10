@@ -1,4 +1,6 @@
-data "aws_iam_account_alias" "current" {}
+data "aws_iam_account_alias" "current" {
+  count       = var.name == null ? 1 : 0
+}
 
 # Retrieve the Spot Account ID
 data "external" "account" {
