@@ -1,12 +1,18 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
-- Changelog
+
+
+<a name="v0.3.3"></a>
+## [v0.3.3] (April 10, 2023)
+
+- Only require AWS account alias when name is unspecified ([#16](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/16))
 
 
 <a name="v0.3.2"></a>
 ## [v0.3.2] (February 13, 2023)
 
+- Changelog for v0.3.2 ([#15](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/15))
 - fix: move setup.py install to pip to remove warning ([#14](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/14))
 
 
@@ -70,7 +76,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.3...HEAD
+[v0.3.3]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.2.2...v0.3.0
