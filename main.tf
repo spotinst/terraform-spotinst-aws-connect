@@ -24,6 +24,7 @@ resource "null_resource" "account" {
     }
     provisioner "local-exec" {
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${self.triggers.token}"
+        interpreter = ["python"]
     }
     provisioner "local-exec" {
         when        = destroy
