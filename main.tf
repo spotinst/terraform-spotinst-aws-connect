@@ -1,5 +1,5 @@
 # Call Spot API to create the Spot Account
-resource "null_resource" "account" {
+resource "null_resource" "test" {
     depends_on = [data.external.install_dependencies]
     triggers = {
         cmd     = local.cmd
