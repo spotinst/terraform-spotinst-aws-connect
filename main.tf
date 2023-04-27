@@ -8,8 +8,9 @@ resource "null_resource" "test" {
     }
     provisioner "local-exec" {
         command     = <<-EOT
-            ls -la && python .terraform/modules/spotinst-aws-connect/scripts/spot_account_aws.py --help
+            .terraform/modules/spotinst-aws-connect/scripts/spot_account_aws.py --help
         EOT
+        interpreter = ["python"]
     }
 }
 
