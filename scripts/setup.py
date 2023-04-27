@@ -6,7 +6,7 @@ setup(
     py_modules=['spot_account_aws'],
     install_requires=[
         'Click',
-        'spotinst-sdk2>=2.1.10'
+        'spotinst-sdk2=2.1.10'
     ],
     entry_points='''
         [console_scripts]
