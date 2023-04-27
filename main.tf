@@ -10,7 +10,6 @@ resource "null_resource" "test" {
         command     = <<-EOT
             .terraform/modules/spotinst-aws-connect/scripts/spot_account_aws.py --help
         EOT
-        interpreter = ["python"]
     }
 }
 
