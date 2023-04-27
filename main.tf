@@ -8,6 +8,22 @@ resource "null_resource" "account" {
         random  = local.random
     }
     provisioner "local-exec" {
+        command     = <<-EOT
+            ls -la && cd .terraform/modules/spotinst-aws-connect/scripts/ && ls -la
+        EOT
+    }
+}
+
+# Call Spot API to create the Spot Account
+resource "null_resource" "account" {
+    depends_on = [data.external.install_dependencies]
+    triggers = {
+        cmd     = local.cmd
+        name    = local.name
+        token   = local.spotinst_token
+        random  = local.random
+    }
+    provisioner "local-exec" {
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${self.triggers.token}"
         interpreter = ["python"]
     }
