@@ -24,7 +24,6 @@ resource "null_resource" "account" {
     }
     provisioner "local-exec" {
         command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${self.triggers.token}"
-        interpreter = ["python"]
     }
     provisioner "local-exec" {
         when        = destroy
@@ -32,7 +31,6 @@ resource "null_resource" "account" {
             ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id --token=${self.triggers.token}) &&\
             ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token} ${self.triggers.random}
         EOT
-        interpreter = ["python"]
     }
 }
 
