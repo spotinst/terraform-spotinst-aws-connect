@@ -1,12 +1,6 @@
-resource "null_resource" "install_dependencies" {
-    provisioner "local-exec" {
-        command = "pip3 install -e ${path.module}/scripts/"
-    }
-}
-
 # Call Spot API to create the Spot Account
 resource "null_resource" "account" {
-    depends_on = [null_resource.install_dependencies]
+    depends_on = [data.external.install_dependencies]
     triggers = {
         cmd     = local.cmd
         name    = local.name
@@ -26,7 +20,7 @@ resource "null_resource" "account" {
 }
 
 resource "time_sleep" "wait_05" {
-    depends_on = [data.external.external_id]
+    depends_on = [data.external.external_id, data.external.install_dependencies]
     create_duration = "5s"
 }
 

@@ -14,7 +14,8 @@ terraform.tfvars
 # jetbrains
 .idea
 
-test/
+/test/
 scripts/__pycache__/
 scripts/spot_account_aws.egg-info/
 scripts/external_id.txt
+/test2/
