@@ -1,49 +1,34 @@
-resource "null_resource" "install_dependencies" {
-    provisioner "local-exec" {
-        command = "pip3 install -e ${path.module}/scripts/"
-    }
+provider "spotinst" {
+    token = var.spotinst_token
 }
 
-# Call Spot API to create the Spot Account
-resource "null_resource" "account" {
-    depends_on = [null_resource.install_dependencies]
-    triggers = {
-        cmd     = local.cmd
-        name    = local.name
-        token   = local.spotinst_token
-        random  = local.random
-    }
-    provisioner "local-exec" {
-        command     = "${self.triggers.cmd} create ${self.triggers.name} --token=${self.triggers.token}"
-    }
-    provisioner "local-exec" {
-        when        = destroy
-        command = <<-EOT
-            ID=$(${self.triggers.cmd} get --filter=name=${self.triggers.name} --attr=account_id --token=${self.triggers.token}) &&\
-            ${self.triggers.cmd} delete "$ID" --token=${self.triggers.token} ${self.triggers.random}
-        EOT
-    }
+# Create AWS account on Spot
+resource "spotinst_account_aws" "spot_acct" {
+    name=var.name
 }
 
-resource "time_sleep" "wait_05" {
-    depends_on = [data.external.external_id]
-    create_duration = "5s"
-}
-
-resource "aws_ssm_parameter" "external-id" {
-    depends_on = [time_sleep.wait_05]
-    name = "Spot-External-ID-${random_id.random_string.hex}"
-    type = "String"
-    value = data.external.external_id.result["external_id"]
-
-    lifecycle {
-        ignore_changes = [ value, tags ]
+# Create externalId
+resource "null_resource" "externalid" {
+    provisioner "local-exec" {
+        command = <<EOT
+             curl -X POST https://api.spotinst.io/setup/credentials/aws/externalId?accountId=${spotinst_account_aws.spot_acct.id} \
+             -H 'Content-Type: application/json' \
+             -H "Authorization: Bearer ${var.spotinst_token}" > externalid.json
+EOT
     }
+}
+data "local_file" "externalid" {
+    depends_on = [null_resource.externalid]
+    filename = "externalid.json"
+}
+locals {
+    user_data = jsondecode(data.local_file.externalid.content)
+    externalids = [for item in local.user_data.response.items : item.externalId]
 }
 
 # Create AWS Role for Spot
 resource "aws_iam_role" "spot"{
-    name = var.role_name == null ? "SpotRole-${local.account_id}-${random_id.random_string.hex}" : var.role_name
+    name = var.role_name == null ? "SpotRole-${spotinst_account_aws.spot_acct.id}-${random_id.random_string.hex}" : var.role_name
     provisioner "local-exec" {
         # Without this set-cloud-credentials fails
         command = "sleep 10"
@@ -60,7 +45,7 @@ resource "aws_iam_role" "spot"{
                 "Action": "sts:AssumeRole",
                 "Condition": {
                     "StringEquals": {
-                    "sts:ExternalId": "${aws_ssm_parameter.external-id.value}"
+                    "sts:ExternalId": "${local.externalids[0]}"
                     }
                 }
                 }
@@ -75,7 +60,7 @@ resource "aws_iam_role" "spot"{
 
 # Create IAM Policy
 resource "aws_iam_policy" "spot" {
-    name        = var.policy_name == null ? "Spot-Policy-${local.account_id}-${random_id.random_string.hex}" : var.policy_name
+    name        = var.policy_name == null ? "Spot-Policy-${spotinst_account_aws.spot_acct.id}-${random_id.random_string.hex}" : var.policy_name
     path        = "/"
     description = "Spot by NetApp IAM policy to manage resources"
     policy      = var.policy_file == null ? templatefile("${path.module}/spot_policy.json", {}) : var.policy_file
@@ -97,9 +82,8 @@ resource "time_sleep" "wait_05_seconds" {
 }
 
 # Link the Role ARN to the Spot Account
-resource "null_resource" "account_association" {
-    depends_on = [aws_iam_role_policy_attachment.spot, time_sleep.wait_05_seconds]
-    provisioner "local-exec" {
-        command = "${local.cmd} set-cloud-credentials ${local.account_id} ${aws_iam_role.spot.arn} --token=${local.spotinst_token}"
-    }
+resource "spotinst_credentials_aws" "credential" {
+  depends_on = [aws_iam_role_policy_attachment.spot, time_sleep.wait_05_seconds]
+  iamrole = aws_iam_role.spot.arn
+  account_id = spotinst_account_aws.spot_acct.id
 }
