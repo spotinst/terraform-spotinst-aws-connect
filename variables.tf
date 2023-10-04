@@ -1,7 +1,6 @@
 variable "name" {
     type        = string
-    default     = null
-    description = "(OPTIONAL) Name for the Spot account. If none is provided will use the AWS Linked account display name for the Spot account name"
+    description = "Name for the Spot account. The account name must contain at least one character that is a-z or A-Z"
 }
 variable "spotinst_token" {
     type        = string
