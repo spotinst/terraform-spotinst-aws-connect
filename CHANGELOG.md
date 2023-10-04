@@ -3,9 +3,19 @@
 
 
 
+<a name="v0.4.0"></a>
+## [v0.4.0] (October 5, 2023)
+
+- added support for AWS create account and connect using terraform-spotinst-provider resources. ([#19](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/19))
+- [src] removed common workflow
+- [src] added common workflow
+
+
 <a name="v0.3.3"></a>
 ## [v0.3.3] (April 10, 2023)
 
+- Merge pull request [#17](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/17) from spotinst/changelog_0.3.3
+- Update changelog
 - Only require AWS account alias when name is unspecified ([#16](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/16))
 
 
@@ -76,7 +86,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.4.0...HEAD
+[v0.4.0]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.3...v0.4.0
 [v0.3.3]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.0...v0.3.1
