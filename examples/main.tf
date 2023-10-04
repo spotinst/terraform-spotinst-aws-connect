@@ -1,7 +1,7 @@
 module "spotinst-aws-connect" {
     source = "spotinst/aws-connect/spotinst"
 
-    #Name of the linked account in Spot (Optional) If none is provided will use account alias as the account name.
+    #Name for the Spot account. The account name must contain at least one character that is a-z or A-Z
     name = "your-acct-name"
     spotinst_token="your-token"
 
