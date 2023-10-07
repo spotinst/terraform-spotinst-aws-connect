@@ -3,9 +3,16 @@
 
 
 
-<a name="v0.4.0"></a>
-## [v0.4.0] (October 5, 2023)
+<a name="v0.4.1"></a>
+## [v0.4.1] (October 7, 2023)
 
+- fixed account name in example and readme ([#21](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/21))
+
+
+<a name="v0.4.0"></a>
+## [v0.4.0] (October 4, 2023)
+
+- Changelog 0.4.0 ([#20](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/20))
 - added support for AWS create account and connect using terraform-spotinst-provider resources. ([#19](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/19))
 - [src] removed common workflow
 - [src] added common workflow
@@ -38,13 +45,13 @@
 - V0.3.0 - Move SSM to terraform resource ([#12](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/12))
 
 
-<a name="v0.2.2"></a>
-## [v0.2.2] (July 19, 2022)
-
-
-
 <a name="v0.2.1"></a>
 ## [v0.2.1] (July 19, 2022)
+
+
+
+<a name="v0.2.2"></a>
+## [v0.2.2] (July 19, 2022)
 
 - update policy_file variable ([#10](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/10))
 - update policy file variable ([#9](https://github.com/spotinst/terraform-spotinst-aws-connect/issues/9))
@@ -86,14 +93,15 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.4.1...HEAD
+[v0.4.1]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.3...v0.4.0
 [v0.3.3]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.3.0...v0.3.1
-[v0.3.0]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.2.2...v0.3.0
-[v0.2.2]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.2.1...v0.2.2
-[v0.2.1]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.1.4...v0.2.1
+[v0.3.0]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.2.1...v0.3.0
+[v0.2.1]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.2.2...v0.2.1
+[v0.2.2]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.1.4...v0.2.2
 [v0.1.4]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.1.3...v0.1.4
 [v0.1.3]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.2.0...v0.1.3
 [v0.2.0]: https://github.com/spotinst/terraform-spotinst-aws-connect/compare/v0.1.1...v0.2.0
