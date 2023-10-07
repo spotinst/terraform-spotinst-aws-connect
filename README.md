@@ -16,7 +16,7 @@ module "spotinst-aws-connect" {
     
     #Name for the Spot account. The account name must contain at least one character that is a-z or A-Z
 
-    name = "your-acct-name"
+    name = "your-account-name"
     spotinst_token = "Redacted"
 
     #Policy File (Optional) File with policy to attach to the Spot role
